@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>호텔 등록 - TravelGo</title>
+</head>
+<body>
+
+<h1>호텔 등록</h1>
+<a th:href="@{/}">메인으로</a>
+
+<form th:action="@{/hotels/new}" th:object="${hotelForm}" method="post">
+    <h2>호텔 정보</h2>
+    <p><label>호텔명</label> <input type="text" th:field="*{hotelName}" required></p>
+    <p><label>도시</label> <input type="text" th:field="*{address.city}"></p>
+    <p><label>주소</label> <input type="text" th:field="*{address.street}"></p>
+    <p><label>우편번호</label> <input type="text" th:field="*{address.zipcode}"></p>
+
+    <h2>객실 1</h2>
+    <p><label>객실명</label> <input type="text" th:field="*{rooms[0].name}"></p>
+    <p><label>기준인원</label> <input type="number" th:field="*{rooms[0].baseCapacity}"></p>
+    <p><label>최대인원</label> <input type="number" th:field="*{rooms[0].maxCapacity}"></p>
+    <p><label>객실수</label> <input type="number" th:field="*{rooms[0].totalCount}"></p>
+    <p><label>평일가격</label> <input type="number" th:field="*{rooms[0].weekDayPrice}"></p>
+    <p><label>주말가격</label> <input type="number" th:field="*{rooms[0].weekendPrice}"></p>
+
+    <button type="submit">등록</button>
+</form>
+
+</body>
+</html>

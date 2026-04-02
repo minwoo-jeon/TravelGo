@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelGo - 모든 여행의 시작</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #006ce4;
+            --accent-color: #ff5a5f;
+            --text-main: #2a2a2a;
+            --bg-light: #f5f7fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Apple SD Gothic Neo', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-main); }
+
+        /* 헤더 */
+        header {
+            background: #fff; padding: 15px 10%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--primary-color); cursor: pointer; text-decoration: none; }
+
+        /* 네비게이션 정렬 및 간격 */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* 요소들 사이의 여유로운 간격 */
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #444;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary-color); }
+
+        /* 로그인 후: 회원 이름 스타일 */
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-left: 15px;
+            border-left: 1px solid #eee; /* 숙소 메뉴와 시각적 분리 */
+        }
+        .user-name {
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 로그아웃 버튼을 좀 더 깔끔한 버튼 형태로 */
+        .logout-btn {
+            font-size: 0.8rem;
+            color: #888 !important;
+            padding: 4px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white !important;
+        }
+
+        /* 검색 섹션 (히어로) */
+        .search-hero {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover; background-position: center;
+            height: 450px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 0 5%;
+        }
+        .search-hero h1 { color: white; font-size: 2.5rem; margin-bottom: 30px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+
+        /* 검색바 박스 */
+        .search-container {
+            background: #fff; padding: 20px; border-radius: 12px;
+            display: flex; gap: 10px; width: 100%; max-width: 1000px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .search-item { flex: 1; display: flex; flex-direction: column; border-right: 1px solid #eee; padding: 0 15px; }
+        .search-item:last-child { border-right: none; }
+        .search-item label { font-size: 0.8rem; color: #777; margin-bottom: 5px; }
+        .search-item input { border: none; font-size: 1rem; font-weight: bold; outline: none; }
+
+        .search-btn {
+            background: var(--primary-color); color: white; border: none;
+            padding: 0 40px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+        }
+
+        /* 여행지 카드 섹션 */
+        .section-title { padding: 50px 10% 20px; font-size: 1.5rem; }
+        .card-container {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px; padding: 0 10% 50px;
+        }
+        .dest-card {
+            background: white; border-radius: 15px; overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s;
+        }
+        .dest-card:hover { transform: translateY(-5px); }
+        .dest-card img { width: 100%; height: 180px; object-fit: cover; }
+        .dest-info { padding: 15px; }
+        .dest-info h4 { margin-bottom: 5px; }
+        .dest-info p { font-size: 0.9rem; color: #666; }
+        .price { color: var(--accent-color); font-weight: bold; margin-top: 10px; display: block; }
+
+        @media (max-width: 768px) {
+            .search-container { flex-direction: column; }
+            .search-item { border-right: none; border-bottom: 1px solid #eee; padding: 10px 0; }
+            .search-btn { padding: 15px; margin-top: 10px; }
+            .user-section { border-left: none; padding-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a th:href="@{/}" class="logo">TravelGo</a>
+    <nav class="nav-links">
+        <a href="#"><i class="fa-solid fa-bed"></i> 숙소</a>
+        <a th:href="@{/hotels/new}"><i class="fa-solid fa-hotel"></i> 호텔 등록</a>
+        <a th:href="@{/hotels/my}"><i class="fa-solid fa-calendar-days"></i> 요금설정</a>
+
+        <a th:if="${member == null}" th:href="@{/members/login}" style="color: var(--primary-color);">로그인</a>
+        <a th:if="${member != null}" th:href="@{/hotels/my}"><i class="fa-solid fa-list"></i> 내 숙소</a>
+        <a th:if="${member != null}" th:href="@{/members/myPage}" style="color: var(--primary-color);">내예약</a>
+
+        <div th:if="${member != null}" class="user-section">
+            <span class="user-name">
+                <i class="fa-solid fa-circle-user" style="color: var(--primary-color);"></i>
+                <span th:text="${member.name} + '님'">회원명님</span>
+            </span>
+            <a th:href="@{/members/logout}" class="logout-btn">로그아웃</a>
+        </div>
+    </nav>
+</header>
+
+<section class="search-hero">
+    <h1>어디로 떠나고 싶으신가요?</h1>
+    <form th:action="@{/search}" method="get" class="search-container">
+        <div class="search-item">
+            <label for="city">목적지</label>
+            <input id="city" name="city" type="text" placeholder="도시명" th:value="${param.city != null && !param.city.isEmpty() ? param.city : defaultSearchCity}">
+        </div>
+        <div class="search-item">
+            <label for="checkIn">체크인</label>
+            <input id="checkIn" name="checkIn" type="date" th:value="${param.checkIn != null && !param.checkIn.isEmpty() ? param.checkIn : #temporals.format(defaultSearchCheckIn, 'yyyy-MM-dd')}">
+        </div>
+        <div class="search-item">
+            <label for="checkOut">체크아웃</label>
+            <input id="checkOut" name="checkOut" type="date" th:value="${param.checkOut != null && !param.checkOut.isEmpty() ? param.checkOut : #temporals.format(defaultSearchCheckOut, 'yyyy-MM-dd')}">
+        </div>
+        <div class="search-item">
+            <label for="roomCount">객실 수</label>
+            <input id="roomCount" name="roomCount" type="number" min="1" value="1" placeholder="1" th:value="${param.roomCount != null ? param.roomCount : 1}">
+        </div>
+        <button type="submit" class="search-btn">검색</button>
+    </form>
+</section>
+
+<h2 class="section-title">인기 여행지 추천</h2>
+<div class="card-container">
+    <div class="dest-card">
+        <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=500&q=60" alt="도쿄">
+        <div class="dest-info">
+            <h4>일본, 도쿄</h4>
+            <p>지금 가장 인기 있는 여행지</p>
+            <span class="price">158,000원~</span>
+        </div>
+    </div>
+    <div class="dest-card">
+        <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=500&q=60" alt="제주">
+        <div class="dest-info">
+            <h4>대한민국, 제주</h4>
+            <p>푸른 바다와 함께하는 휴식</p>
+            <span class="price">89,000원~</span>
+        </div>
+    </div>
+    <div class="dest-card">
+        <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?auto=format&fit=crop&w=500&q=60" alt="런던">
+        <div class="dest-info">
+            <h4>영국, 런던</h4>
+            <p>전통과 현대가 공존하는 도시</p>
+            <span class="price">1,240,000원~</span>
+        </div>
+    </div>
+    <div class="dest-card">
+        <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=500&q=60" alt="베네치아">
+        <div class="dest-info">
+            <h4>이탈리아, 베네치아</h4>
+            <p>낭만적인 운하의 도시</p>
+            <span class="price">450,000원~</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

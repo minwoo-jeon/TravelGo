@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 - TravelGo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+        :root {
+            --primary-color: #006ce4;
+            --secondary-color: #003580;
+            --accent-color: #00eb91;
+            --error-color: #e53e3e;
+            --bg-gradient: linear-gradient(135deg, #006ce4 0%, #003580 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Apple SD Gothic Neo', sans-serif; }
+
+        body {
+            background-color: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .signup-wrapper {
+            display: flex;
+            background: #fff;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* 왼쪽 섹션 */
+        .signup-side {
+            flex: 1;
+            background: var(--bg-gradient);
+            padding: 40px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .signup-side h2 { font-size: 2.2rem; margin-bottom: 20px; line-height: 1.3; }
+        .benefit-item { display: flex; align-items: center; margin-bottom: 15px; font-size: 1rem; opacity: 0.9; }
+        .benefit-item i { margin-right: 15px; color: var(--accent-color); font-size: 1.2rem; }
+
+        /* 오른쪽 폼 섹션 */
+        .signup-form-section { flex: 1.2; padding: 50px; }
+        .form-header { margin-bottom: 30px; }
+        .form-header h3 { font-size: 1.5rem; color: #333; margin-bottom: 8px; }
+        .form-header p { color: #888; font-size: 0.9rem; }
+
+        .form-group { margin-bottom: 22px; position: relative; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #555; margin-bottom: 8px; }
+        .form-group input {
+            width: 100%;
+            padding: 14px 14px 14px 40px;
+            border: 2px solid #edf2f7;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .form-group i { position: absolute; left: 15px; top: 38px; color: #cbd5e0; }
+        .form-group input:focus { border-color: var(--primary-color); outline: none; background: #fff; }
+
+        /* 에러 발생 시 스타일 */
+        .form-group input.fieldError { border-color: var(--error-color); background-color: #fff5f5; }
+        .error-text { color: var(--error-color); font-size: 0.8rem; margin-top: 5px; font-weight: 500; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,108,228,0.3);
+            margin-top: 10px;
+        }
+        .btn-submit:hover { background: var(--secondary-color); transform: translateY(-2px); }
+
+        .form-footer { margin-top: 25px; text-align: center; font-size: 0.9rem; color: #777; }
+        .form-footer a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            .signup-wrapper { flex-direction: column; }
+            .signup-side { padding: 30px; }
+            .signup-form-section { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="signup-wrapper">
+  <div class="signup-side">
+    <h2>TravelGo의<br>특별한 혜택을<br>누려보세요</h2>
+    <div class="benefit-item"><i class="fa-solid fa-circle-check"></i> 전 세계 100만개 숙소 최저가</div>
+    <div class="benefit-item"><i class="fa-solid fa-circle-check"></i> 첫 가입 시 10,000원 할인 쿠폰</div>
+    <div class="benefit-item"><i class="fa-solid fa-circle-check"></i> 예약 금액의 5% 포인트 적립</div>
+  </div>
+
+  <div class="signup-form-section">
+    <div class="form-header">
+      <h3 th:onclick="|location.href='@{/}'|" style="cursor:pointer; color:var(--primary-color)">TravelGo</h3>
+      <h3>계정 만들기</h3>
+      <p>간편하게 가입하고 여행을 시작하세요.</p>
+    </div>
+
+    <form th:action="@{/members/new}" th:object="${memberForm}" method="post">
+
+      <div class="form-group">
+        <label>이름</label>
+        <i class="fa-solid fa-user"></i>
+        <input type="text" th:field="*{name}" placeholder="실명을 입력해주세요" required>
+      </div>
+
+      <div class="form-group">
+        <label>이메일</label>
+        <i class="fa-solid fa-envelope"></i>
+
+        <input type="email" th:field="*{email}"
+               th:classappend="${#fields.hasErrors('email')} ? 'fieldError' : ''"
+               placeholder="example@travelgo.com" required>
+        <p class="error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect data</p>
+      </div>
+
+      <div class="form-group">
+        <label>비밀번호</label>
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" th:field="*{password}" placeholder="8자 이상의 비밀번호" required>
+      </div>
+
+      <button type="submit" class="btn-submit">무료로 시작하기</button>
+    </form>
+
+    <div class="form-footer">
+      이미 회원이신가요? <a th:href="@{/members/login}">로그인 하기</a>
+    </div>
+  </div>
+</div>
+
+<script th:inline="javascript">
+    window.onload = function() {
+        // 성공 알림 처리
+        var isSuccess = [[${signupSuccess}]];
+        if (isSuccess) {
+            Swal.fire({
+                icon: 'success',
+                title: '회원가입 성공!',
+                text: '환영합니다! 확인을 누르면 로그인 페이지로 이동합니다.',
+                confirmButtonColor: '#006ce4',
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href = "/members/login";
+                }
+            });
+        }
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 - TravelGo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+        :root {
+            --primary-color: #006ce4;
+            --bg-light: #f5f7fa;
+            --text-gray: #666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Apple SD Gothic Neo', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: #fff;
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .login-header { margin-bottom: 30px; }
+        .login-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .login-header p { color: var(--text-gray); font-size: 0.95rem; }
+
+        /* 폼 스타일 */
+        .form-group { text-align: left; margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .form-group input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,108,228,0.1); }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn-login:hover { background: #0056b3; }
+
+        /* 하단 링크 */
+        .login-footer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+        .login-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        .login-footer a:hover { text-decoration: underline; }
+
+        .back-to-home {
+            margin-top: 15px;
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #999;
+            text-decoration: none;
+        }
+
+          /* 에러 발생 시 스타일 */
+        .form-group input.fieldError { border-color: var(--error-color); background-color: #fff5f5; }
+        .error-text { color: var(--error-color); font-size: 0.8rem; margin-top: 5px; font-weight: 500; }
+
+
+        .alert-message {
+        background-color: #e3f2fd; /* 연한 파란색 */
+        color: #0d47a1; /* 진한 파란색 */
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #bbdefb;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.9rem;
+    }
+    </style>
+</head>
+<body>
+
+
+<div class="login-container">
+  <div class="login-header">
+    <h1 th:onclick="|location.href='@{/}'|">TravelGo</h1>
+    <p>더 나은 여행의 시작, 로그인을 해주세요.</p>
+  </div>
+
+  <form th:action="@{/members/login}" th:object="${loginForm}" method="post">
+
+    <div class="form-group">
+      <label>이메일 주소</label>
+      <input type="email" th:field="*{email}" placeholder="example@travelgo.com" required>
+    </div>
+
+    <div class="form-group">
+      <label>비밀번호</label>
+      <input type="password" th:field="*{password}"
+             th:classappend="${#fields.hasErrors('password')} ? 'fieldError' : ''"
+             placeholder="비밀번호를 입력하세요" required>
+      <p class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect data</p>
+    </div>
+
+    <button type="submit" class="btn-login">로그인</button>
+  </form>
+
+
+  <div class="login-footer">
+    아직 회원이 아니신가요?
+    <a th:href="@{/members/new}">회원가입 하기</a>
+  </div>
+
+  <a th:href="@{/}" class="back-to-home"><i class="fa-solid fa-arrow-left"></i> 메인으로 돌아가기</a>
+</div>
+
+</body>
+</html>

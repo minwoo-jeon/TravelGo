@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         // 2. 미리 정의한 ApiResponse 구조에 맞춰서 반환
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(ErrorCode.INVALID_INPUT_VALUE));
+                .body(ApiResponse.error(ErrorCode.INVALID_INPUT_VALUE,errorMessage));
     }
 
 

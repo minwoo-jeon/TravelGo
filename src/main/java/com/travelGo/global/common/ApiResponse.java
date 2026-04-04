@@ -17,6 +17,7 @@ public class ApiResponse<T> {
     private T data;
     private String errorCode;
     private String errorMessage;
+    private String detailMessage;
 
     public static <T> ApiResponse<T> success(String message, T data) {
         return ApiResponse.<T>builder()
@@ -33,5 +34,15 @@ public class ApiResponse<T> {
                 .errorMessage(errorCode.getMessage())
                 .build();
     }
+
+    public static ApiResponse<?> error(ErrorCode errorCode, String message) {
+        return ApiResponse.builder()
+                .status(errorCode.getStatus())
+                .detailMessage(message)
+                .errorCode(errorCode.name())
+                .errorMessage(errorCode.getMessage())
+                .build();
+    }
+
 
 }

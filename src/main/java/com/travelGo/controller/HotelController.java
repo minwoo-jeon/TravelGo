@@ -10,6 +10,7 @@ import com.travelGo.service.HotelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import static com.travelGo.dto.HotelDto.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/stays")
+@Tag(name = "Hotel API", description = "호텔 정보 관련 API")
 @RequiredArgsConstructor
 public class HotelController {
 

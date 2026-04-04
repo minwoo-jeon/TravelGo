@@ -18,7 +18,7 @@ import static com.travelGo.dto.RoomDto.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/hotels")
+@RequestMapping("/api/rooms")
 @Tag(name = "Room API", description = "객실 정보 및 객실 관련 API")
 public class RoomController {
     private final RoomService roomService;
@@ -28,10 +28,10 @@ public class RoomController {
      * 객실 정보 수정
      */
     @Operation(summary = "객실 정보 수정", description = "특정 호텔의 객실 정보를 업데이트합니다.")
-    @PatchMapping("/{hotelId}/rooms/{roomId}")
-    public ResponseEntity<ApiResponse<UpdateRoomResponse>> modify(@PathVariable(value = "hotelId") Long hotelId, @PathVariable(value = "roomId") Long roomId,
+    @PatchMapping("/{roomId}")
+    public ResponseEntity<ApiResponse<UpdateRoomResponse>> modify(@PathVariable(value = "roomId") Long roomId,
                                                      @RequestBody RoomUpdateDto updateForm) {
-        UpdateRoomResponse response = roomService.updateRoomInfo(hotelId, roomId, updateForm);
+        UpdateRoomResponse response = roomService.updateRoomInfo( roomId, updateForm);
 
         return ResponseEntity.ok(ApiResponse.success("객실 정보 수정 완료", response));
     }
@@ -44,7 +44,7 @@ public class RoomController {
             description = "특정 호텔의 상세 정보와 선택한 날짜에 예약 가능한 객실 목록을 조회합니다."
     )
 
-    @GetMapping("/{hotelId}/rooms")
+    @GetMapping("/{hotelId}")
     public ResponseEntity<ApiResponse<RoomSearchResponse>> searchRooms(
             @Parameter(description = "호텔 고유 ID", example = "1")
             @PathVariable(value = "hotelId") Long hotelId,

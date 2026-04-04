@@ -29,9 +29,9 @@ public class RoomService {
      * 객실 정보 수정
      */
     @Transactional
-    public UpdateRoomResponse updateRoomInfo(Long hotelId, Long roomId, RoomUpdateDto updateForm) {
+    public UpdateRoomResponse updateRoomInfo(Long roomId, RoomUpdateDto updateForm) {
 
-        Room room = roomRepository.findRoomInHotel(hotelId, roomId).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
 
         room.updateRoomInfo(updateForm.getTotalCount(), updateForm.getWeekdayPrice(), updateForm.getWeekendPrice());
 

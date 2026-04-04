@@ -41,7 +41,7 @@ class ReservationServiceTest {
 
         // 2. 호텔 생성
         Address addr = new Address("서울", "중구", "12345");
-        testHotel = Hotel.createHotel("테스트 호텔", addr);
+        testHotel = Hotel.createHotel("테스트 호텔", addr,"12312314");
         testHotel.setOwner(testMember);
         em.persist(testHotel);
 
